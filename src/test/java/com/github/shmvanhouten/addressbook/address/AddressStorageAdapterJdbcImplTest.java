@@ -15,19 +15,29 @@ import static org.junit.Assert.*;
 
 public class AddressStorageAdapterJdbcImplTest {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private AddressStorageAdapter addressStorageAdapter;
 
     @Before
     public void setUp() throws Exception {
         DataSource dataSource = new SingleConnectionDataSource("jdbc:mysql://localhost/address?useSSL=false", "root", DATABASE_PASSWORD, true);
         namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+        addressStorageAdapter = new AddressStorageAdapterJdbcImpl(namedParameterJdbcTemplate);
     }
 
     @Test
     public void itShouldGiveAListOfAllAddresses() throws Exception {
-        AddressStorageAdapter addressStorageAdapter = new AddressStorageAdapterJdbcImpl(namedParameterJdbcTemplate);
 
         List<Address> addresses = addressStorageAdapter.getAllAddresses();
 
         assertThat(addresses.get(0).getFirstName(), is("Sjoerd"));
+    }
+
+    @Test
+    public void itShouldGiveAnAddressById() throws Exception {
+        int id = 1;
+
+        final String actualFirstName = addressStorageAdapter.getAddressForId(id).getFirstName();
+
+        assertThat(actualFirstName, is("Sjoerd"));
     }
 }
