@@ -7,4 +7,6 @@ public interface AddressStorageAdapter {
     public List<Address> getAllAddresses();
 
     Address getAddressForId(int id);
+
+    void addAddress(Address address);
 }

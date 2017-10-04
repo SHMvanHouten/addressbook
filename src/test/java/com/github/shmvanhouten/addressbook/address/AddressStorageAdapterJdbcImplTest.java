@@ -9,6 +9,7 @@ import javax.sql.DataSource;
 
 import java.util.List;
 
+import static com.github.shmvanhouten.addressbook.address.Address.AddressBuilder.anAddress;
 import static com.github.shmvanhouten.addressbook.util.Password.DATABASE_PASSWORD;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
@@ -39,5 +40,28 @@ public class AddressStorageAdapterJdbcImplTest {
         final String actualFirstName = addressStorageAdapter.getAddressForId(id).getFirstName();
 
         assertThat(actualFirstName, is("Sjoerd"));
+    }
+
+    @Test
+    public void itShouldAddANewAddressToTheDatabase() throws Exception {
+        Address addressToInsert = makeAddressToInsert();
+
+        addressStorageAdapter.addAddress(addressToInsert);
+
+        List<Address> addresses = addressStorageAdapter.getAllAddresses();
+        Address lastAddedAddress = addresses.get(addresses.size() - 1);
+
+        System.out.println(lastAddedAddress.getId());
+
+        assertThat(lastAddedAddress.getFirstName(), is("John-Bob-Alice"));
+    }
+
+    private Address makeAddressToInsert() {
+        return anAddress()
+                .withFirstName("John-Bob-Alice")
+                .withSurName("Doe")
+                .withStreetName("Main Street")
+                .withHouseNumber(1)
+                .build();
     }
 }
