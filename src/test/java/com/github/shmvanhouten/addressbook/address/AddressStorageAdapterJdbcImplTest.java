@@ -1,15 +1,22 @@
 package com.github.shmvanhouten.addressbook.address;
 
+import com.github.shmvanhouten.addressbook.DataBaseStructure;
+import org.apache.ibatis.jdbc.SQL;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 
 import javax.sql.DataSource;
 
 import java.util.List;
 
+import static com.github.shmvanhouten.addressbook.DataBaseStructure.AddressColumns.ID;
+import static com.github.shmvanhouten.addressbook.DataBaseStructure.Table.ADDRESS;
 import static com.github.shmvanhouten.addressbook.address.Address.AddressBuilder.anAddress;
+import static com.github.shmvanhouten.addressbook.util.NamedParamUtil.namedParam;
 import static com.github.shmvanhouten.addressbook.util.Password.DATABASE_PASSWORD;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
@@ -30,16 +37,16 @@ public class AddressStorageAdapterJdbcImplTest {
 
         List<Address> addresses = addressStorageAdapter.getAllAddresses();
 
-        assertThat(addresses.get(0).getFirstName(), is("Sjoerd"));
+        assertThat(addresses.get(0).getStreetName(), is("Kalverstraat"));
     }
 
     @Test
     public void itShouldGiveAnAddressById() throws Exception {
         int id = 1;
 
-        final String actualFirstName = addressStorageAdapter.getAddressForId(id).getFirstName();
+        final String actualStreetName = addressStorageAdapter.getAddressForId(id).getStreetName();
 
-        assertThat(actualFirstName, is("Sjoerd"));
+        assertThat(actualStreetName, is("Kalverstraat"));
     }
 
     @Test
@@ -53,12 +60,24 @@ public class AddressStorageAdapterJdbcImplTest {
 
         System.out.println(lastAddedAddress.getId());
 
-        assertThat(lastAddedAddress.getFirstName(), is("John-Bob-Alice"));
+        assertThat(lastAddedAddress.getStreetName(), is("Main Street"));
+
+        deleteAddress(lastAddedAddress.getId());
+    }
+
+    private void deleteAddress(int id) {
+        String deleteStatement = new SQL()
+                .DELETE_FROM(ADDRESS)
+                .WHERE(ID + " = " + namedParam(ID))
+                .toString();
+        SqlParameterSource param = new MapSqlParameterSource(ID, id);
+
+        namedParameterJdbcTemplate.update(deleteStatement, param);
     }
 
     private Address makeAddressToInsert() {
         return anAddress()
-                .withFirstName("John-Bob-Alice")
+                .withFirstName("John")
                 .withSurName("Doe")
                 .withStreetName("Main Street")
                 .withHouseNumber(1)

@@ -1,6 +1,5 @@
 package com.github.shmvanhouten.addressbook.address;
 
-import com.github.shmvanhouten.addressbook.DataBaseStructure;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
