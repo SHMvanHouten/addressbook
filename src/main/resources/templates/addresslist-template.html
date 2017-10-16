@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:remove="all">Template for HTML email with inline image</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<p th:text="'Hello ' + ${name}">
+    Hello, Peter Static!
+</p>
+
+<p>Your addresses are:</p>
+
+<ul th:remove="all-but-first">
+    <li th:each="address : ${addresses}" th:text="${address}">Java</li>
+    <li>JavaScript</li>
+    <li>HTML</li>
+</ul>
+
+</body>
+</html>
