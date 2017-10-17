@@ -1,6 +1,5 @@
 package com.github.shmvanhouten.addressbook.address;
 
-import com.github.shmvanhouten.addressbook.DataBaseStructure;
 import org.apache.ibatis.jdbc.SQL;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,7 +9,6 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 
 import javax.sql.DataSource;
-
 import java.util.List;
 
 import static com.github.shmvanhouten.addressbook.DataBaseStructure.AddressColumns.ID;
@@ -19,7 +17,7 @@ import static com.github.shmvanhouten.addressbook.address.Address.AddressBuilder
 import static com.github.shmvanhouten.addressbook.util.NamedParamUtil.namedParam;
 import static com.github.shmvanhouten.addressbook.util.Password.DATABASE_PASSWORD;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 public class AddressStorageAdapterJdbcImplTest {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;

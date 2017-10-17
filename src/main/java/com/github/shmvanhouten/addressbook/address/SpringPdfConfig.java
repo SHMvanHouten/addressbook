@@ -10,7 +10,7 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
 @Component
 public class SpringPdfConfig {
     @Bean
-    public TemplateEngine emailTemplateEngine() {
+    public TemplateEngine pdfTemplateEngine() {
         SpringTemplateEngine templateEngine = new SpringTemplateEngine();
         templateEngine.addTemplateResolver(htmlTemplateResolver());
         return templateEngine;
