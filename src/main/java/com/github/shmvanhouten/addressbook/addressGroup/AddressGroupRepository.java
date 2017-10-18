@@ -8,4 +8,6 @@ public interface AddressGroupRepository {
     public void addAddressGroup(String groupName, List<Integer> addressIds);
 
     Optional<AddressGroup> getAddressGroup(String groupName);
+
+    void deleteGroup(String groupName);
 }

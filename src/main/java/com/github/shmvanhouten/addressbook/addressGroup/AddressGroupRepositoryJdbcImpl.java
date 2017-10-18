@@ -47,9 +47,22 @@ public class AddressGroupRepositoryJdbcImpl implements AddressGroupRepository {
                 .SELECT(ADDRESS_GROUP_NAME)
                 .FROM(ADDRESS_GROUP)
                 .WHERE(ADDRESS_GROUP_NAME + " = " + namedParam(ADDRESS_GROUP_NAME))
+                .WHERE(ADDRESS_GROUP_SEQUENCE + " = " + namedParam(ADDRESS_GROUP_SEQUENCE))
+                .toString();
+        SqlParameterSource params = new MapSqlParameterSource(ADDRESS_GROUP_NAME, groupName)
+                .addValue(ADDRESS_GROUP_SEQUENCE, 1);
+        return Optional.of(jdbcTemplate.queryForObject(selectQuery, params, new AddressGroupRowMapper()));
+    }
+
+    @Override
+    public void deleteGroup(String groupName) {
+        String deleteStatement = new SQL()
+                .DELETE_FROM(ADDRESS_GROUP)
+                .WHERE(ADDRESS_GROUP_NAME + " = " + namedParam(ADDRESS_GROUP_NAME))
                 .toString();
         SqlParameterSource param = new MapSqlParameterSource(ADDRESS_GROUP_NAME, groupName);
-        return Optional.of(jdbcTemplate.queryForObject(selectQuery, param, new AddressGroupRowMapper()));
+
+        jdbcTemplate.update(deleteStatement, param);
     }
 
     private void addAddressGroupWithAddresses(String groupName, List<Integer> addressIds) {
@@ -107,6 +120,7 @@ public class AddressGroupRepositoryJdbcImpl implements AddressGroupRepository {
                 .toString();
     }
 
+    //Todo: finish this method to create an addressgroup in the database without addresses?
     private void addAddressGroup(String groupName) {
 
     }
