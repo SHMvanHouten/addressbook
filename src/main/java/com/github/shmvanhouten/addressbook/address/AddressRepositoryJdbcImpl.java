@@ -12,6 +12,7 @@ import java.util.List;
 
 import static com.github.shmvanhouten.addressbook.DataBaseStructure.AddressColumns.*;
 import static com.github.shmvanhouten.addressbook.DataBaseStructure.Table.ADDRESS;
+import static com.github.shmvanhouten.addressbook.util.CoalesceMaxUtil.coalesceMax;
 import static com.github.shmvanhouten.addressbook.util.NamedParamUtil.namedParam;
 
 @Repository
@@ -80,7 +81,7 @@ public class AddressRepositoryJdbcImpl implements AddressRepository {
 
     private int getNextId() {
         String selectQuery = new SQL()
-                .SELECT("COALESCE(MAX(" + ID + "), 0)")
+                .SELECT( coalesceMax(ID) )
                 .FROM(ADDRESS)
                 .toString();
 

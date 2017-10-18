@@ -1,5 +1,6 @@
 package com.github.shmvanhouten.addressbook.address;
 
+import com.github.shmvanhouten.addressbook.AbstractJdbcRepositoryTest;
 import org.apache.ibatis.jdbc.SQL;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,14 +20,11 @@ import static com.github.shmvanhouten.addressbook.util.Password.DATABASE_PASSWOR
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-public class AddressRepositoryJdbcImplTest {
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+public class AddressRepositoryJdbcImplTest extends AbstractJdbcRepositoryTest{
     private AddressRepository addressRepository;
 
     @Before
     public void setUp() throws Exception {
-        DataSource dataSource = new SingleConnectionDataSource("jdbc:mysql://localhost/address?useSSL=false", "root", DATABASE_PASSWORD, true);
-        namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
         addressRepository = new AddressRepositoryJdbcImpl(namedParameterJdbcTemplate);
     }
 
