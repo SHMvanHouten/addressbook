@@ -20,7 +20,7 @@ import static com.github.shmvanhouten.addressbook.util.Password.DATABASE_PASSWOR
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-public class AddressRepositoryJdbcImplTest extends AbstractJdbcRepositoryTest{
+public class AddressRepositoryTest extends AbstractJdbcRepositoryTest{
     private AddressRepository addressRepository;
 
     @Before
@@ -34,6 +34,13 @@ public class AddressRepositoryJdbcImplTest extends AbstractJdbcRepositoryTest{
         List<Address> addresses = addressRepository.getAllAddresses();
 
         assertThat(addresses.get(0).getStreetName(), is("Kalverstraat"));
+    }
+
+    @Test
+    public void itShouldGiveAListOfAllAddressesFromGroupPrive() throws Exception {
+        List<Address> addresses = addressRepository.getAddressesForAddressGroup(1);
+        assertThat(addresses.get(0).getStreetName(), is("Kalverstraat"));
+        assertThat(addresses.get(1).getSurName(), is("Doe"));
     }
 
     @Test
