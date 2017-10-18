@@ -19,21 +19,21 @@ import static com.github.shmvanhouten.addressbook.util.Password.DATABASE_PASSWOR
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-public class AddressStorageAdapterJdbcImplTest {
+public class AddressRepositoryJdbcImplTest {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    private AddressStorageAdapter addressStorageAdapter;
+    private AddressRepository addressRepository;
 
     @Before
     public void setUp() throws Exception {
         DataSource dataSource = new SingleConnectionDataSource("jdbc:mysql://localhost/address?useSSL=false", "root", DATABASE_PASSWORD, true);
         namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-        addressStorageAdapter = new AddressStorageAdapterJdbcImpl(namedParameterJdbcTemplate);
+        addressRepository = new AddressRepositoryJdbcImpl(namedParameterJdbcTemplate);
     }
 
     @Test
     public void itShouldGiveAListOfAllAddresses() throws Exception {
 
-        List<Address> addresses = addressStorageAdapter.getAllAddresses();
+        List<Address> addresses = addressRepository.getAllAddresses();
 
         assertThat(addresses.get(0).getStreetName(), is("Kalverstraat"));
     }
@@ -42,7 +42,7 @@ public class AddressStorageAdapterJdbcImplTest {
     public void itShouldGiveAnAddressById() throws Exception {
         int id = 1;
 
-        final String actualStreetName = addressStorageAdapter.getAddressForId(id).getStreetName();
+        final String actualStreetName = addressRepository.getAddressForId(id).getStreetName();
 
         assertThat(actualStreetName, is("Kalverstraat"));
     }
@@ -51,9 +51,9 @@ public class AddressStorageAdapterJdbcImplTest {
     public void itShouldAddANewAddressToTheDatabase() throws Exception {
         Address addressToInsert = makeAddressToInsert();
 
-        addressStorageAdapter.addAddress(addressToInsert);
+        addressRepository.addAddress(addressToInsert);
 
-        List<Address> addresses = addressStorageAdapter.getAllAddresses();
+        List<Address> addresses = addressRepository.getAllAddresses();
         Address lastAddedAddress = addresses.get(addresses.size() - 1);
 
         System.out.println(lastAddedAddress.getId());

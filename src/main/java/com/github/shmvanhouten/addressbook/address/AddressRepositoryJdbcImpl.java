@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -16,11 +15,11 @@ import static com.github.shmvanhouten.addressbook.DataBaseStructure.Table.ADDRES
 import static com.github.shmvanhouten.addressbook.util.NamedParamUtil.namedParam;
 
 @Repository
-public class AddressStorageAdapterJdbcImpl implements AddressStorageAdapter {
+public class AddressRepositoryJdbcImpl implements AddressRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     @Autowired
-    public AddressStorageAdapterJdbcImpl(NamedParameterJdbcTemplate jdbcTemplate) {
+    public AddressRepositoryJdbcImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
