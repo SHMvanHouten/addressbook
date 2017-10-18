@@ -24,6 +24,18 @@
     </properties>
 <dependencies>
     <dependency>
+        <groupId>com.openhtmltopdf</groupId>
+        <artifactId>openhtmltopdf-core</artifactId>
+        <version>${openhtml.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>com.openhtmltopdf</groupId>
+        <artifactId>openhtmltopdf-pdfbox</artifactId>
+        <version>${openhtml.version}</version>
+    </dependency>
+
+    <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
         <scope>test</scope>
@@ -35,17 +47,7 @@
         <version>5.1.38</version>
     </dependency>
 
-    <dependency>
-        <groupId>com.openhtmltopdf</groupId>
-        <artifactId>openhtmltopdf-core</artifactId>
-        <version>${openhtml.version}</version>
-    </dependency>
 
-    <dependency>
-        <groupId>com.openhtmltopdf</groupId>
-        <artifactId>openhtmltopdf-pdfbox</artifactId>
-        <version>${openhtml.version}</version>
-    </dependency>
     <dependency>
         <groupId>org.mybatis</groupId>
         <artifactId>mybatis</artifactId>
