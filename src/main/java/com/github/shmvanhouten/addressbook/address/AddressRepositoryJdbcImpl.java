@@ -79,6 +79,11 @@ public class AddressRepositoryJdbcImpl implements AddressRepository {
         jdbcTemplate.update(insertStatement, params);
     }
 
+    @Override
+    public List<Address> getAddressesForAddressGroup(int addressGroupId) {
+        return null;
+    }
+
     private int getNextId() {
         String selectQuery = new SQL()
                 .SELECT( coalesceMax(ID) )

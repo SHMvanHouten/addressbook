@@ -1,14 +1,18 @@
 package com.github.shmvanhouten.addressbook.addressGroup;
 
 import org.apache.ibatis.jdbc.SQL;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.EmptySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 import static com.github.shmvanhouten.addressbook.DataBaseStructure.AddressGroupColumns.*;
 import static com.github.shmvanhouten.addressbook.DataBaseStructure.AddressGroupIdentifiersColumns.*;
@@ -17,10 +21,12 @@ import static com.github.shmvanhouten.addressbook.addressGroup.NewAddressGroupId
 import static com.github.shmvanhouten.addressbook.util.CoalesceMaxUtil.coalesceMax;
 import static com.github.shmvanhouten.addressbook.util.NamedParamUtil.namedParam;
 
+@Repository
 public class AddressGroupRepositoryJdbcImpl implements AddressGroupRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
+    @Autowired
     public AddressGroupRepositoryJdbcImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -32,6 +38,18 @@ public class AddressGroupRepositoryJdbcImpl implements AddressGroupRepository {
         } else {
             addAddressGroupWithAddresses(groupName, addressIds);
         }
+    }
+
+    @Override
+    public Optional<AddressGroup> getAddressGroup(String groupName) {
+        String selectQuery = new SQL()
+                .SELECT(ID)
+                .SELECT(ADDRESS_GROUP_NAME)
+                .FROM(ADDRESS_GROUP)
+                .WHERE(ADDRESS_GROUP_NAME + " = " + namedParam(ADDRESS_GROUP_NAME))
+                .toString();
+        SqlParameterSource param = new MapSqlParameterSource(ADDRESS_GROUP_NAME, groupName);
+        return Optional.of(jdbcTemplate.queryForObject(selectQuery, param, new AddressGroupRowMapper()));
     }
 
     private void addAddressGroupWithAddresses(String groupName, List<Integer> addressIds) {

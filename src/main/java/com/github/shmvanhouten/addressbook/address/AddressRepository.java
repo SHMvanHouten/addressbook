@@ -9,4 +9,6 @@ public interface AddressRepository {
     Address getAddressForId(int id);
 
     void addAddress(Address address);
+
+    List<Address> getAddressesForAddressGroup(int addressGroupId);
 }
