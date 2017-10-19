@@ -25,3 +25,8 @@ CREATE TABLE addressGroup(
   addressId INT(20),
   FOREIGN KEY (addressId) REFERENCES address(ID)
 );
+
+CREATE TABLE user(
+  ID INT UNIQUE PRIMARY KEY NOT NULL ,
+  name VARCHAR(15) UNIQUE NOT NULL
+);
