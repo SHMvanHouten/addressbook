@@ -18,7 +18,7 @@ import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class AddressGroupHandlerTest {
+public class AddressGroupServiceTest {
 
     @Mock
     private AddressRepository addressRepository;
@@ -27,7 +27,7 @@ public class AddressGroupHandlerTest {
 
     @Test
     public void itShouldGetAnAddressGroupForTheNameFriends() throws Exception {
-        AddressGroupHandler addressGroupHandler = new AddressGroupHandler(addressGroupRepository, addressRepository);
+        AddressGroupService addressGroupService = new AddressGroupService(addressGroupRepository, addressRepository);
 
         final String groupName = "friends";
 
@@ -46,7 +46,7 @@ public class AddressGroupHandlerTest {
 
         when(addressRepository.getAddressesForAddressGroup(3)).thenReturn(addresses);
 
-        AddressGroup addressGroup = addressGroupHandler.getAddressGroup(groupName).get();
+        AddressGroup addressGroup = addressGroupService.getAddressGroup(groupName).get();
 
         assertThat(addressGroup.getAddressGroupId(), is(3));
         assertThat(addressGroup.getAddresses().get(0).getFirstName(), is("John"));

@@ -11,13 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class AddressHandler {
+public class AddressService {
 
     private final AddressRepository addressRepository;
     private final TemplateEngine pdfTemplateEngine;
 
     @Autowired
-    public AddressHandler(AddressRepository addressRepository, TemplateEngine pdfTemplateEngine) {
+    public AddressService(AddressRepository addressRepository, TemplateEngine pdfTemplateEngine) {
         this.addressRepository = addressRepository;
         this.pdfTemplateEngine = pdfTemplateEngine;
     }

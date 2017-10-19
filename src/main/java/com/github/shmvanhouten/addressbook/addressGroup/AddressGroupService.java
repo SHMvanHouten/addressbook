@@ -7,13 +7,13 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class AddressGroupHandler {
+public class AddressGroupService {
 
     private final AddressGroupRepository addressGroupRepository;
     private final AddressRepository addressRepository;
 
     @Autowired
-    public AddressGroupHandler(AddressGroupRepository addressGroupRepository, AddressRepository addressRepository) {
+    public AddressGroupService(AddressGroupRepository addressGroupRepository, AddressRepository addressRepository) {
         this.addressGroupRepository = addressGroupRepository;
         this.addressRepository = addressRepository;
     }
