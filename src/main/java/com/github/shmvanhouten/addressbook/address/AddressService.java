@@ -11,20 +11,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class AddressHandler {
+public class AddressService {
 
-    private final AddressStorageAdapter addressStorageAdapter;
+    private final AddressRepository addressRepository;
     private final TemplateEngine pdfTemplateEngine;
 
     @Autowired
-    public AddressHandler(AddressStorageAdapter addressStorageAdapter, TemplateEngine pdfTemplateEngine) {
-        this.addressStorageAdapter = addressStorageAdapter;
+    public AddressService(AddressRepository addressRepository, TemplateEngine pdfTemplateEngine) {
+        this.addressRepository = addressRepository;
         this.pdfTemplateEngine = pdfTemplateEngine;
     }
 
 
     byte[] createPdfOfAllAddresses() {
-        List<Address> addresses = addressStorageAdapter.getAllAddresses();
+        List<Address> addresses = addressRepository.getAllAddresses();
         List<String> addressesStringified = new ArrayList<>();
         for (Address address : addresses) {
             addressesStringified.add(address.getFirstName() + " " + address.getSurName() + ", " + address.getStreetName() + " " + address.getHouseNumber());
@@ -33,7 +33,7 @@ public class AddressHandler {
         //userName would be gotten from input or something
         final String userName = "John Doe";
         context.setVariable("name", userName);
-        context.setVariable("addresses", addressesStringified);
+        context.setVariable("addresses", addresses);
         String addressList = pdfTemplateEngine.process("templates/addresslist-template.html", context);
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

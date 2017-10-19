@@ -1,5 +1,6 @@
 package com.github.shmvanhouten.addressbook.address;
 
+import com.github.shmvanhouten.addressbook.AbstractJdbcRepositoryTest;
 import org.apache.ibatis.jdbc.SQL;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,30 +20,34 @@ import static com.github.shmvanhouten.addressbook.util.Password.DATABASE_PASSWOR
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-public class AddressStorageAdapterJdbcImplTest {
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    private AddressStorageAdapter addressStorageAdapter;
+public class AddressRepositoryTest extends AbstractJdbcRepositoryTest{
+    private AddressRepository addressRepository;
 
     @Before
     public void setUp() throws Exception {
-        DataSource dataSource = new SingleConnectionDataSource("jdbc:mysql://localhost/address?useSSL=false", "root", DATABASE_PASSWORD, true);
-        namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-        addressStorageAdapter = new AddressStorageAdapterJdbcImpl(namedParameterJdbcTemplate);
+        addressRepository = new AddressRepositoryJdbcImpl(namedParameterJdbcTemplate);
     }
 
     @Test
     public void itShouldGiveAListOfAllAddresses() throws Exception {
 
-        List<Address> addresses = addressStorageAdapter.getAllAddresses();
+        List<Address> addresses = addressRepository.getAllAddresses();
 
         assertThat(addresses.get(0).getStreetName(), is("Kalverstraat"));
+    }
+
+    @Test
+    public void itShouldGiveAListOfAllAddressesFromGroupPrive() throws Exception {
+        List<Address> addresses = addressRepository.getAddressesForAddressGroup(1);
+        assertThat(addresses.get(0).getStreetName(), is("Kalverstraat"));
+        assertThat(addresses.get(1).getSurName(), is("Doe"));
     }
 
     @Test
     public void itShouldGiveAnAddressById() throws Exception {
         int id = 1;
 
-        final String actualStreetName = addressStorageAdapter.getAddressForId(id).getStreetName();
+        final String actualStreetName = addressRepository.getAddressForId(id).getStreetName();
 
         assertThat(actualStreetName, is("Kalverstraat"));
     }
@@ -51,9 +56,9 @@ public class AddressStorageAdapterJdbcImplTest {
     public void itShouldAddANewAddressToTheDatabase() throws Exception {
         Address addressToInsert = makeAddressToInsert();
 
-        addressStorageAdapter.addAddress(addressToInsert);
+        addressRepository.addAddress(addressToInsert);
 
-        List<Address> addresses = addressStorageAdapter.getAllAddresses();
+        List<Address> addresses = addressRepository.getAllAddresses();
         Address lastAddedAddress = addresses.get(addresses.size() - 1);
 
         System.out.println(lastAddedAddress.getId());

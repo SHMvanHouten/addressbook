@@ -7,20 +7,23 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 import static com.github.shmvanhouten.addressbook.DataBaseStructure.AddressColumns.*;
+import static com.github.shmvanhouten.addressbook.DataBaseStructure.AddressGroupColumns.ADDRESS_GROUP_ID;
+import static com.github.shmvanhouten.addressbook.DataBaseStructure.AddressGroupColumns.ADDRESS_ID;
 import static com.github.shmvanhouten.addressbook.DataBaseStructure.Table.ADDRESS;
+import static com.github.shmvanhouten.addressbook.DataBaseStructure.Table.ADDRESS_GROUP;
+import static com.github.shmvanhouten.addressbook.util.CoalesceMaxUtil.coalesceMax;
 import static com.github.shmvanhouten.addressbook.util.NamedParamUtil.namedParam;
 
 @Repository
-public class AddressStorageAdapterJdbcImpl implements AddressStorageAdapter {
+public class AddressRepositoryJdbcImpl implements AddressRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     @Autowired
-    public AddressStorageAdapterJdbcImpl(NamedParameterJdbcTemplate jdbcTemplate) {
+    public AddressRepositoryJdbcImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -79,9 +82,27 @@ public class AddressStorageAdapterJdbcImpl implements AddressStorageAdapter {
         jdbcTemplate.update(insertStatement, params);
     }
 
+    @Override
+    public List<Address> getAddressesForAddressGroup(int addressGroupId) {
+        String selectQuery = new SQL()
+                .SELECT(ID)
+                .SELECT(FIRST_NAME)
+                .SELECT(SUR_NAME)
+                .SELECT(STREET_NAME)
+                .SELECT(HOUSE_NUMBER)
+                .FROM(ADDRESS)
+                .JOIN(ADDRESS_GROUP + " ON " + ID + " = " + ADDRESS_ID)
+                .WHERE(ADDRESS_GROUP_ID + " = " + namedParam(ADDRESS_GROUP_ID))
+                .toString();
+
+        SqlParameterSource param = new MapSqlParameterSource(ADDRESS_GROUP_ID, addressGroupId);
+
+        return jdbcTemplate.query(selectQuery, param, new AddressRowMapper());
+    }
+
     private int getNextId() {
         String selectQuery = new SQL()
-                .SELECT("COALESCE(MAX(" + ID + "), 0)")
+                .SELECT(coalesceMax(ID))
                 .FROM(ADDRESS)
                 .toString();
 

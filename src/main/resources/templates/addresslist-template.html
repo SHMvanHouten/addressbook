@@ -11,11 +11,20 @@
 
 <p>Your addresses are:</p>
 
-<ul th:remove="all-but-first">
-    <li th:each="address : ${addresses}" th:text="${address}">Java</li>
-    <li>JavaScript</li>
-    <li>HTML</li>
-</ul>
+<table style="width:100%">
+    <tr>
+        <th>First name</th>
+        <th>Surname</th>
+        <th>Street name</th>
+        <th>House number</th>
+    </tr>
+    <tr th:each="address : ${addresses}">
+        <td th:text="${address.getFirstName()}">First name</td>
+        <td th:text="${address.getSurName()}">Surname</td>
+        <td th:text="${address.getStreetName()}">Street name</td>
+        <td th:text="${address.getHouseNumber()}">House number</td>
+    </tr>
+</table>
 
 </body>
 </html>

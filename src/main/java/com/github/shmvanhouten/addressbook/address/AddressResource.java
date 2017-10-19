@@ -12,17 +12,17 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @RequestMapping(value = "/address")
 public class AddressResource {
 
-    private final AddressHandler addressHandler;
+    private final AddressService addressService;
 
     @Autowired
-    public AddressResource(AddressHandler addressHandler) {
-        this.addressHandler = addressHandler;
+    public AddressResource(AddressService addressService) {
+        this.addressService = addressService;
     }
 
     @RequestMapping(method = GET, produces = APPLICATION_PDF_VALUE)
     public byte[] getAddressBookPdf(@RequestParam String userName){
         //Todo: user specific addressbooks to be added later
 
-        return addressHandler.createPdfOfAllAddresses();
+        return addressService.createPdfOfAllAddresses();
     }
 }
