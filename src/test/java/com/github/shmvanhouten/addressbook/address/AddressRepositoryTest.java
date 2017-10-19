@@ -5,20 +5,16 @@ import org.apache.ibatis.jdbc.SQL;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 
-import javax.sql.DataSource;
 import java.util.List;
 
 import static com.github.shmvanhouten.addressbook.DataBaseStructure.AddressColumns.ID;
 import static com.github.shmvanhouten.addressbook.DataBaseStructure.Table.ADDRESS;
 import static com.github.shmvanhouten.addressbook.address.Address.AddressBuilder.anAddress;
 import static com.github.shmvanhouten.addressbook.util.NamedParamUtil.namedParam;
-import static com.github.shmvanhouten.addressbook.util.Password.DATABASE_PASSWORD;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class AddressRepositoryTest extends AbstractJdbcRepositoryTest{
     private AddressRepository addressRepository;

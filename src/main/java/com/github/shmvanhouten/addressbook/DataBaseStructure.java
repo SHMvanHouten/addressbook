@@ -5,6 +5,7 @@ public class DataBaseStructure {
 
         public static final String ADDRESS = "address";
         public static final String ADDRESS_GROUP = "addressGroup";
+        public static final String USER = "user";
     }
 
     public class AddressColumns {
@@ -34,6 +35,11 @@ public class DataBaseStructure {
         public static final String AS_GROUP_ID = " AS groupId";
         public static final String AS_SEQUENCE = " AS sequence";
         public static final String AS_UNITED = " AS united";
+    }
+
+    public class UserColumns {
+        public static final String ID = "id";
+        public static final String NAME = "name";
     }
 
 }
