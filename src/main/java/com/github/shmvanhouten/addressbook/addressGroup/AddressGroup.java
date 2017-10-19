@@ -3,7 +3,8 @@ package com.github.shmvanhouten.addressbook.addressGroup;
 import com.github.shmvanhouten.addressbook.address.Address;
 
 import java.util.List;
-
+//Todo: instead field addresses holding a list of actual addresses, just let it hold the addressIds, addresses can be picked up later or combined with
+// the list of all addresses in the gui.
 public class AddressGroup {
     private int addressGroupId;
     private String name;
