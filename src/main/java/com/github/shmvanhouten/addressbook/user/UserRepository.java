@@ -6,4 +6,5 @@ public interface UserRepository {
 
     List<User> getAllUsers();
 
+    void addUser(String testUser);
 }
