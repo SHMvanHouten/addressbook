@@ -2,6 +2,7 @@ package com.github.shmvanhouten.addressbook.user;
 
 import org.apache.ibatis.jdbc.SQL;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.namedparam.EmptySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -9,6 +10,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.github.shmvanhouten.addressbook.DataBaseStructure.Table.USER;
 import static com.github.shmvanhouten.addressbook.DataBaseStructure.UserColumns.ID;
@@ -50,6 +52,34 @@ public class UserRepositoryJdbcImpl implements UserRepository {
                 .addValue(NAME, userName);
 
         jdbcTemplate.update(insertStatement, params);
+    }
+
+    @Override
+    public void deleteUser(int userId) {
+        String deleteStatement = new SQL()
+                .DELETE_FROM(USER)
+                .WHERE(ID + " = " + namedParam(ID))
+                .toString();
+        SqlParameterSource param = new MapSqlParameterSource(ID, userId);
+
+        jdbcTemplate.update(deleteStatement, param);
+    }
+
+    @Override
+    public Optional<User> getUserById(int userId) {
+        String selectQuery = new SQL()
+                .SELECT(ID)
+                .SELECT(NAME)
+                .FROM(USER)
+                .WHERE(ID + " = " + namedParam(ID))
+                .toString();
+        SqlParameterSource param = new MapSqlParameterSource(ID, userId);
+
+        try {
+            return Optional.of(jdbcTemplate.queryForObject(selectQuery, param, new UserRowMapper()));
+        } catch (DataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     private int getNextId() {

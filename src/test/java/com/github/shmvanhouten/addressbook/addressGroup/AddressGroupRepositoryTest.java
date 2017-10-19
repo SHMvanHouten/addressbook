@@ -2,22 +2,17 @@ package com.github.shmvanhouten.addressbook.addressGroup;
 
 import com.github.shmvanhouten.addressbook.AbstractJdbcRepositoryTest;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
-import static org.hamcrest.core.Is.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 
 public class AddressGroupRepositoryTest extends AbstractJdbcRepositoryTest {
     private AddressGroupRepository addressGroupRepository;
-
-    @Rule
-    public final ExpectedException expectedException = ExpectedException.none();
 
     @Before
     public void setUp() throws Exception {
@@ -43,8 +38,8 @@ public class AddressGroupRepositoryTest extends AbstractJdbcRepositoryTest {
 
         addressGroupRepository.deleteGroup(lastGroupId);
 
-        expectedException.expect(EmptyResultDataAccessException.class);
-        addressGroupRepository.getAddressGroup(lastGroupId);
+        Optional<AddressGroup> deletedAddressGroup = addressGroupRepository.getAddressGroup(lastGroupId);
+        assertThat(deletedAddressGroup.isPresent(), is(false));
     }
 
 }

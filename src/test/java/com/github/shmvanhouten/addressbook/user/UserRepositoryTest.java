@@ -3,10 +3,13 @@ package com.github.shmvanhouten.addressbook.user;
 import com.github.shmvanhouten.addressbook.AbstractJdbcRepositoryTest;
 import org.apache.ibatis.jdbc.SQL;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.springframework.jdbc.core.namedparam.EmptySqlParameterSource;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.github.shmvanhouten.addressbook.DataBaseStructure.Table.USER;
 import static com.github.shmvanhouten.addressbook.DataBaseStructure.UserColumns.ID;
@@ -39,6 +42,14 @@ public class UserRepositoryTest extends AbstractJdbcRepositoryTest {
         User lastUser = getLatestAddedUser();
 
         assertThat(lastUser.getName(), is(testUser));
+        int userId = lastUser.getId();
+
+        userRepository.deleteUser(userId);
+
+        Optional<User> deletedUser = userRepository.getUserById(userId);
+
+        assertThat(deletedUser.isPresent(), is(false));
+
 
     }
 

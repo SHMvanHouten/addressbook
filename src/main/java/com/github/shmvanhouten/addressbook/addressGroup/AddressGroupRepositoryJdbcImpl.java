@@ -2,6 +2,7 @@ package com.github.shmvanhouten.addressbook.addressGroup;
 
 import org.apache.ibatis.jdbc.SQL;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.EmptySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -52,7 +53,12 @@ public class AddressGroupRepositoryJdbcImpl implements AddressGroupRepository {
                 .toString();
         SqlParameterSource params = new MapSqlParameterSource(ADDRESS_GROUP_ID, groupId)
                 .addValue(ADDRESS_GROUP_SEQUENCE, 1);
-        return Optional.of(jdbcTemplate.queryForObject(selectQuery, params, new AddressGroupRowMapper()));
+
+        try {
+            return Optional.of(jdbcTemplate.queryForObject(selectQuery, params, new AddressGroupRowMapper()));
+        } catch (DataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
