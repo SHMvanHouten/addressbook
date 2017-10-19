@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,28 +42,44 @@ public class AddressGroupRepositoryJdbcImpl implements AddressGroupRepository {
     }
 
     @Override
-    public Optional<AddressGroup> getAddressGroup(String groupName) {
+    public Optional<AddressGroup> getAddressGroup(int groupId) {
         String selectQuery = new SQL()
-                .SELECT(ID)
+                .SELECT(ADDRESS_GROUP_ID)
                 .SELECT(ADDRESS_GROUP_NAME)
                 .FROM(ADDRESS_GROUP)
-                .WHERE(ADDRESS_GROUP_NAME + " = " + namedParam(ADDRESS_GROUP_NAME))
+                .WHERE(ADDRESS_GROUP_ID + " = " + namedParam(ADDRESS_GROUP_ID))
                 .WHERE(ADDRESS_GROUP_SEQUENCE + " = " + namedParam(ADDRESS_GROUP_SEQUENCE))
                 .toString();
-        SqlParameterSource params = new MapSqlParameterSource(ADDRESS_GROUP_NAME, groupName)
+        SqlParameterSource params = new MapSqlParameterSource(ADDRESS_GROUP_ID, groupId)
                 .addValue(ADDRESS_GROUP_SEQUENCE, 1);
         return Optional.of(jdbcTemplate.queryForObject(selectQuery, params, new AddressGroupRowMapper()));
     }
 
     @Override
-    public void deleteGroup(String groupName) {
+    public void deleteGroup(int groupId) {
         String deleteStatement = new SQL()
                 .DELETE_FROM(ADDRESS_GROUP)
-                .WHERE(ADDRESS_GROUP_NAME + " = " + namedParam(ADDRESS_GROUP_NAME))
+                .WHERE(ADDRESS_GROUP_ID + " = " + namedParam(ADDRESS_GROUP_ID))
                 .toString();
-        SqlParameterSource param = new MapSqlParameterSource(ADDRESS_GROUP_NAME, groupName);
+        SqlParameterSource param = new MapSqlParameterSource(ADDRESS_GROUP_ID, groupId);
 
         jdbcTemplate.update(deleteStatement, param);
+    }
+
+    @Override
+    public List<AddressGroup> getAllAddressGroups() {
+        String selectQuery = new SQL()
+                .SELECT("DISTINCT " + ADDRESS_GROUP_ID)
+                .FROM(ADDRESS_GROUP)
+                .toString();
+
+        List<Integer> addressGroupIds = jdbcTemplate.queryForList(selectQuery, new EmptySqlParameterSource(), Integer.class);
+
+        List<AddressGroup> addressGroups = new ArrayList<>();
+        for (Integer addressGroupId : addressGroupIds) {
+            addressGroups.add(getAddressGroup(addressGroupId).get());
+        }
+        return addressGroups;
     }
 
     private void addAddressGroupWithAddresses(String groupName, List<Integer> addressIds) {

@@ -30,13 +30,14 @@ public class AddressGroupServiceTest {
         AddressGroupService addressGroupService = new AddressGroupService(addressGroupRepository, addressRepository);
 
         final String groupName = "friends";
+        final int addressGroupId = 3;
 
         Optional<AddressGroup> addressGroupOptional = Optional.of(anAddressGroup()
-                .withAddressGroupId(3)
+                .withAddressGroupId(addressGroupId)
                 .withName(groupName)
                 .build());
 
-        when(addressGroupRepository.getAddressGroup(groupName)).thenReturn(addressGroupOptional);
+        when(addressGroupRepository.getAddressGroup(addressGroupId)).thenReturn(addressGroupOptional);
 
         List<Address> addresses = Collections.singletonList(anAddress()
                 .withId(123)
@@ -44,11 +45,11 @@ public class AddressGroupServiceTest {
                 .withSurName("Doe")
                 .build());
 
-        when(addressRepository.getAddressesForAddressGroup(3)).thenReturn(addresses);
+        when(addressRepository.getAddressesForAddressGroup(addressGroupId)).thenReturn(addresses);
 
-        AddressGroup addressGroup = addressGroupService.getAddressGroup(groupName).get();
+        AddressGroup addressGroup = addressGroupService.getAddressGroup(addressGroupId).get();
 
-        assertThat(addressGroup.getAddressGroupId(), is(3));
+        assertThat(addressGroup.getName(), is(groupName));
         assertThat(addressGroup.getAddresses().get(0).getFirstName(), is("John"));
     }
 }
